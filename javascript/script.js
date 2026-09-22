@@ -1,12 +1,229 @@
 /**
- * Anime TV — Interactive Controller & Secret Shell
+ * Anime TV — Interactive Controller & Ambient Engine
  * Inspired by ankitgupta.com.np & WWDC Apple Design Craft
  */
 (() => {
     'use strict';
 
     /* ==========================================================================
-       1. PLATFORM SHOWROOM TABS
+       1. CUSTOM SMOOTH CURSOR (Lag + Hover Magnetism)
+       ========================================================================== */
+    function initCustomCursor() {
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+
+        if (!dot || !ring || window.matchMedia('(hover: none)').matches) return;
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let ringX = mouseX;
+        let ringY = mouseY;
+        let isMoving = false;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Direct hardware-synced position for center dot
+            dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+
+            if (!isMoving) {
+                dot.classList.remove('cursor-hidden');
+                ring.classList.remove('cursor-hidden');
+                isMoving = true;
+            }
+        });
+
+        // Smooth Lerp loop for trailing outer ring
+        function renderCursorRing() {
+            ringX += (mouseX - ringX) * 0.18;
+            ringY += (mouseY - ringY) * 0.18;
+
+            ring.style.transform = `translate3d(${ringX.toFixed(2)}px, ${ringY.toFixed(2)}px, 0) translate(-50%, -50%)`;
+
+            requestAnimationFrame(renderCursorRing);
+        }
+        requestAnimationFrame(renderCursorRing);
+
+        // Hover expansions on interactive controls
+        const interactives = 'a, button, [role="tab"], summary, input, .stat-metric-item, .arch-brick';
+        document.querySelectorAll(interactives).forEach(el => {
+            el.addEventListener('mouseenter', () => ring.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => ring.classList.remove('cursor-hover'));
+        });
+
+        // Hide when mouse leaves window
+        document.addEventListener('mouseleave', () => {
+            dot.classList.add('cursor-hidden');
+            ring.classList.add('cursor-hidden');
+            isMoving = false;
+        });
+        document.addEventListener('mouseenter', () => {
+            dot.classList.remove('cursor-hidden');
+            ring.classList.remove('cursor-hidden');
+        });
+    }
+
+    /* ==========================================================================
+       2. INTERACTIVE AMBIENT CANVAS BACKGROUND
+       ========================================================================== */
+    function initInteractiveBackground() {
+        const canvas = document.getElementById('bgCanvas');
+        if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let width = (canvas.width = window.innerWidth);
+        let height = (canvas.height = window.innerHeight);
+
+        let mouse = { x: width / 2, y: height / 2, active: false };
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            createParticles();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.active = false;
+        });
+
+        // Particle System
+        const particleCount = Math.min(Math.floor(window.innerWidth / 20), 65);
+        let particles = [];
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.45;
+                this.vy = (Math.random() - 0.5) * 0.45;
+                this.radius = Math.random() * 1.6 + 0.8;
+                this.baseAlpha = Math.random() * 0.35 + 0.15;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Wrap boundaries
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+
+                // Mouse subtle repulsion
+                if (mouse.active) {
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = 140;
+
+                    if (dist < maxDist) {
+                        const force = (1 - dist / maxDist) * 1.5;
+                        this.x += (dx / dist) * force;
+                        this.y += (dy / dist) * force;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(34, 197, 94, ${this.baseAlpha})`;
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        createParticles();
+
+        let animFrameId;
+        let isVisible = true;
+
+        document.addEventListener('visibilitychange', () => {
+            isVisible = !document.hidden;
+            if (isVisible) loop();
+            else cancelAnimationFrame(animFrameId);
+        });
+
+        function loop() {
+            if (!isVisible) return;
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw connecting lines for nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxLineDist = 110;
+
+                    if (dist < maxLineDist) {
+                        const alpha = (1 - dist / maxLineDist) * 0.12;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(34, 197, 94, ${alpha})`;
+                        ctx.lineWidth = 0.75;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            animFrameId = requestAnimationFrame(loop);
+        }
+        loop();
+    }
+
+    /* ==========================================================================
+       3. SMOOTH INTERSECTION OBSERVER SCROLL REVEALS
+       ========================================================================== */
+    function initScrollReveals() {
+        const reveals = document.querySelectorAll('.reveal-on-scroll');
+        if (!reveals.length) return;
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+            reveals.forEach(el => el.classList.add('is-revealed'));
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        reveals.forEach(el => observer.observe(el));
+    }
+
+    /* ==========================================================================
+       4. PLATFORM SHOWROOM TABS
        ========================================================================== */
     function initPlatformShowroom() {
         const tabList = document.querySelector('[role="tablist"]');
@@ -23,10 +240,8 @@
             if (index < 0 || index >= tabs.length) return;
             currentIndex = index;
 
-            // Slide showroom track
             sliderTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
 
-            // Update tab states
             tabs.forEach((tab, i) => {
                 const isActive = i === currentIndex;
                 tab.classList.toggle('active', isActive);
@@ -35,18 +250,15 @@
                 if (isActive && focus) tab.focus();
             });
 
-            // Update panels
             panels.forEach((panel, i) => {
                 panel.hidden = (i !== currentIndex);
             });
         }
 
-        // Tab click events
         tabs.forEach((tab, index) => {
             tab.addEventListener('click', () => setPlatform(index));
         });
 
-        // Keyboard Arrow Navigation
         tabList?.addEventListener('keydown', (e) => {
             let nextIndex = currentIndex;
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
@@ -66,7 +278,6 @@
             }
         });
 
-        // Hero CTA link platform selectors
         document.querySelectorAll('[data-target-slide]').forEach(cta => {
             cta.addEventListener('click', () => {
                 const slideNum = parseInt(cta.getAttribute('data-target-slide'), 10);
@@ -78,7 +289,7 @@
     }
 
     /* ==========================================================================
-       2. COPY-TO-CLIPBOARD BUTTONS
+       5. COPY TO CLIPBOARD BUTTONS
        ========================================================================== */
     function initCopyButtons() {
         document.querySelectorAll('.cli-copy-btn').forEach(btn => {
@@ -89,12 +300,11 @@
                 try {
                     await navigator.clipboard.writeText(textToCopy);
                     const originalHTML = btn.innerHTML;
-                    btn.innerHTML = `<code style="color:#4ade80;">✔ Copied to Clipboard!</code>`;
+                    btn.innerHTML = `<code style="color:#4ade80;">✔ Copied!</code>`;
                     setTimeout(() => {
                         btn.innerHTML = originalHTML;
                     }, 2000);
                 } catch {
-                    // Fallback
                     const originalHTML = btn.innerHTML;
                     btn.innerHTML = `<code>${textToCopy}</code>`;
                     setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
@@ -104,7 +314,7 @@
     }
 
     /* ==========================================================================
-       3. SUBTLE 3D TILT ON ARTWORK (Emil Kowalski craft)
+       6. 3D ARTWORK CARD TILT (Emil Kowalski craft)
        ========================================================================== */
     function initArtworkTilt() {
         const card = document.getElementById('artworkCard');
@@ -127,7 +337,7 @@
     }
 
     /* ==========================================================================
-       4. INTERACTIVE SECRET TERMINAL / CLI (like ankitgupta.com.np)
+       7. INTERACTIVE CLI TERMINAL (interactive_shell.sh)
        ========================================================================== */
     function initInteractiveShell() {
         const modal = document.getElementById('cliModal');
@@ -158,7 +368,6 @@
             if (e.target === modal) closeShell();
         });
 
-        // Keyboard Shortcuts (Cmd+K, Ctrl+K, or Backtick `)
         document.addEventListener('keydown', (e) => {
             if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
@@ -180,7 +389,6 @@
             cliOutput.scrollTop = cliOutput.scrollHeight;
         }
 
-        // CLI Command Processor
         function handleCommand(rawCmd) {
             const cmd = rawCmd.trim().toLowerCase();
             appendLine(`<span class="cli-prompt">guest@animetv:~$</span> ${escapeHTML(rawCmd)}`, 'command');
@@ -195,23 +403,23 @@
                 case 'help':
                     appendLine(`
 Available commands:
-  <b style="color:#22c55e;">platforms</b>            - List all supported platforms & packages
-  <b style="color:#22c55e;">download &lt;os&gt;</b>       - Trigger installer (android | tv | fire | win)
-  <b style="color:#22c55e;">stats</b>                - Live streaming engine telemetry stats
-  <b style="color:#22c55e;">specs</b>                - Hardware & codec decoding details
+  <b style="color:#22c55e;">platforms</b>            - List supported platforms & native targets
+  <b style="color:#22c55e;">download &lt;os&gt;</b>       - Trigger installer payload (android | tv | fire | win)
+  <b style="color:#22c55e;">stats</b>                - Show engine stream telemetry
+  <b style="color:#22c55e;">specs</b>                - Video decoding & GPU pipeline details
   <b style="color:#22c55e;">matrix</b>               - Wake up, Neo...
   <b style="color:#22c55e;">about</b>                - Core architecture manifesto
-  <b style="color:#22c55e;">clear</b>                - Clear terminal window
-  <b style="color:#22c55e;">exit</b>                 - Close this interactive shell
+  <b style="color:#22c55e;">clear</b>                - Clear shell buffer
+  <b style="color:#22c55e;">exit</b>                 - Close terminal
                     `);
                     break;
 
                 case 'platforms':
                     appendLine(`
-[01] Android Mobile      (Kotlin / ExoPlayer) -> com.animetv.mobile
-[02] Android TV Leanback (Android TV API)      -> com.animetv.leanback
-[03] Amazon Fire TV      (FireOS 6+)          -> Downloader Code: 82910
-[04] Windows 10/11       (WinUI3 / C++)       -> Iris-Installer-3.3.0.exe
+[01] Android Mobile      (Kotlin / Jetpack)  -> com.animetv.mobile
+[02] Android TV Leanback (Android TV API)    -> com.animetv.leanback
+[03] Amazon Fire TV      (FireOS 6+)        -> Downloader Code: 82910
+[04] Windows 10/11       (WinUI3 / C++)     -> Iris-Installer-3.3.0.exe
                     `);
                     break;
 
@@ -219,20 +427,20 @@ Available commands:
                     if (!arg) {
                         appendLine(`Usage: download &lt;android | tv | fire | win&gt;`, 'error');
                     } else if (['android', 'tv', 'fire', 'win', 'windows'].includes(arg)) {
-                        appendLine(`✔ Starting download payload for [${arg.toUpperCase()}]...`, 'success');
+                        appendLine(`✔ Initiating payload transfer for [${arg.toUpperCase()}]...`, 'success');
                         window.location.href = 'Iris-Installer-3.3.0.exe';
                     } else {
-                        appendLine(`Unknown target '${arg}'. Choose: android, tv, fire, win`, 'error');
+                        appendLine(`Unknown target '${arg}'. Try: android, tv, fire, win`, 'error');
                     }
                     break;
 
                 case 'stats':
                     appendLine(`
 ● Anime TV Node Telemetry:
-  - Ad Block Rate:     100.0% (0 network requests leaked)
-  - Stream Resolution: Up to 4K UHD @ 60fps AV1
-  - Latency:           18ms to nearest CDN resolver
-  - Telemetry:         0 cookies / 0 fingerprints stored
+  - Ad Block Efficiency: 100.0% (0 network ads resolved)
+  - Stream Resolution:   Up to 4K UHD @ 60fps AV1
+  - Resolver Latency:    18ms to nearest edge node
+  - User Telemetry:      0 bytes stored
                     `);
                     break;
 
@@ -241,8 +449,8 @@ Available commands:
 Video Decoding Pipeline:
   - AV1 Profile 0 (Main) @ Level 5.1
   - HEVC Main 10 (H.265) Hardware Decode
-  - Dual Subtitle Rendering Engine (SSA/ASS + SRT)
-  - Audio: Passthrough Dolby Digital / 5.1 Surround
+  - SSA/ASS Subtitle Renderer
+  - 5.1 Surround Passthrough
                     `);
                     break;
 
@@ -288,18 +496,20 @@ Video Decoding Pipeline:
         });
     }
 
-    // Initialize all modules when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            initPlatformShowroom();
-            initCopyButtons();
-            initArtworkTilt();
-            initInteractiveShell();
-        });
-    } else {
+    // Initialize all components
+    function bootstrap() {
+        initCustomCursor();
+        initInteractiveBackground();
+        initScrollReveals();
         initPlatformShowroom();
         initCopyButtons();
         initArtworkTilt();
         initInteractiveShell();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+        bootstrap();
     }
 })();
