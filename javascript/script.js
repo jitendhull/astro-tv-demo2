@@ -1,12 +1,53 @@
 /**
- * Anime TV — Interactive Controller & Ambient Engine
+ * Anime TV — Interactive Controller, Ambient Canvas & Dual-Theme Engine
  * Inspired by ankitgupta.com.np & WWDC Apple Design Craft
  */
 (() => {
     'use strict';
 
     /* ==========================================================================
-       1. CUSTOM SMOOTH CURSOR (Lag + Hover Magnetism)
+       1. DUAL-THEME CONTROLLER (Dark / Light Mode)
+       ========================================================================== */
+    function initThemeEngine() {
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const root = document.documentElement;
+
+        // Retrieve saved theme or detect system preference
+        const savedTheme = localStorage.getItem('animetv_theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'dark');
+
+        setTheme(initialTheme);
+
+        function setTheme(theme) {
+            root.setAttribute('data-theme', theme);
+            localStorage.setItem('animetv_theme', theme);
+
+            // Update theme color meta tag
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) {
+                metaTheme.setAttribute('content', theme === 'dark' ? '#0a0c12' : '#f8fafc');
+            }
+
+            // Dispatch custom event for canvas re-theming
+            window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+        }
+
+        function toggleTheme() {
+            const current = root.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            setTheme(next);
+        }
+
+        themeToggleBtn?.addEventListener('click', toggleTheme);
+
+        // Export helper for terminal shell
+        window.__animetv_setTheme = setTheme;
+        window.__animetv_toggleTheme = toggleTheme;
+    }
+
+    /* ==========================================================================
+       2. CUSTOM SMOOTH CURSOR (Lag + Hover Magnetism)
        ========================================================================== */
     function initCustomCursor() {
         const dot = document.getElementById('cursorDot');
@@ -24,7 +65,6 @@
             mouseX = e.clientX;
             mouseY = e.clientY;
 
-            // Direct hardware-synced position for center dot
             dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
 
             if (!isMoving) {
@@ -46,7 +86,7 @@
         requestAnimationFrame(renderCursorRing);
 
         // Hover expansions on interactive controls
-        const interactives = 'a, button, [role="tab"], summary, input, .stat-metric-item, .arch-brick';
+        const interactives = 'a, button, [role="tab"], summary, input, .stat-metric-item, .arch-brick, .features-brick';
         document.querySelectorAll(interactives).forEach(el => {
             el.addEventListener('mouseenter', () => ring.classList.add('cursor-hover'));
             el.addEventListener('mouseleave', () => ring.classList.remove('cursor-hover'));
@@ -65,7 +105,7 @@
     }
 
     /* ==========================================================================
-       2. INTERACTIVE AMBIENT CANVAS BACKGROUND
+       3. INTERACTIVE AMBIENT CANVAS BACKGROUND (Theme-Adaptive)
        ========================================================================== */
     function initInteractiveBackground() {
         const canvas = document.getElementById('bgCanvas');
@@ -95,7 +135,6 @@
             mouse.active = false;
         });
 
-        // Particle System
         const particleCount = Math.min(Math.floor(window.innerWidth / 20), 65);
         let particles = [];
 
@@ -117,7 +156,6 @@
                 this.x += this.vx;
                 this.y += this.vy;
 
-                // Wrap boundaries
                 if (this.x < 0) this.x = width;
                 if (this.x > width) this.x = 0;
                 if (this.y < 0) this.y = height;
@@ -138,10 +176,14 @@
                 }
             }
 
-            draw() {
+            draw(theme) {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(34, 197, 94, ${this.baseAlpha})`;
+                if (theme === 'light') {
+                    ctx.fillStyle = `rgba(79, 70, 229, ${this.baseAlpha * 0.7})`;
+                } else {
+                    ctx.fillStyle = `rgba(129, 140, 248, ${this.baseAlpha})`;
+                }
                 ctx.fill();
             }
         }
@@ -166,11 +208,11 @@
         function loop() {
             if (!isVisible) return;
             ctx.clearRect(0, 0, width, height);
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
 
-            // Draw connecting lines for nearby particles
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
-                particles[i].draw();
+                particles[i].draw(currentTheme);
 
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
@@ -179,11 +221,13 @@
                     const maxLineDist = 110;
 
                     if (dist < maxLineDist) {
-                        const alpha = (1 - dist / maxLineDist) * 0.12;
+                        const alpha = (1 - dist / maxLineDist) * (currentTheme === 'light' ? 0.08 : 0.14);
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(34, 197, 94, ${alpha})`;
+                        ctx.strokeStyle = currentTheme === 'light'
+                            ? `rgba(79, 70, 229, ${alpha})`
+                            : `rgba(99, 102, 241, ${alpha})`;
                         ctx.lineWidth = 0.75;
                         ctx.stroke();
                     }
@@ -196,7 +240,7 @@
     }
 
     /* ==========================================================================
-       3. SMOOTH INTERSECTION OBSERVER SCROLL REVEALS
+       4. SMOOTH SCROLL REVEAL OBSERVER
        ========================================================================== */
     function initScrollReveals() {
         const reveals = document.querySelectorAll('.reveal-on-scroll');
@@ -223,7 +267,7 @@
     }
 
     /* ==========================================================================
-       4. PLATFORM SHOWROOM TABS
+       5. PLATFORM SHOWROOM TABS
        ========================================================================== */
     function initPlatformShowroom() {
         const tabList = document.querySelector('[role="tablist"]');
@@ -289,7 +333,7 @@
     }
 
     /* ==========================================================================
-       5. COPY TO CLIPBOARD BUTTONS
+       6. COPY TO CLIPBOARD BUTTONS
        ========================================================================== */
     function initCopyButtons() {
         document.querySelectorAll('.cli-copy-btn').forEach(btn => {
@@ -300,7 +344,7 @@
                 try {
                     await navigator.clipboard.writeText(textToCopy);
                     const originalHTML = btn.innerHTML;
-                    btn.innerHTML = `<code style="color:#4ade80;">✔ Copied!</code>`;
+                    btn.innerHTML = `<code style="color:var(--accent);">✔ Copied!</code>`;
                     setTimeout(() => {
                         btn.innerHTML = originalHTML;
                     }, 2000);
@@ -314,7 +358,7 @@
     }
 
     /* ==========================================================================
-       6. 3D ARTWORK CARD TILT (Emil Kowalski craft)
+       7. 3D ARTWORK CARD TILT (Emil Kowalski craft)
        ========================================================================== */
     function initArtworkTilt() {
         const card = document.getElementById('artworkCard');
@@ -337,7 +381,7 @@
     }
 
     /* ==========================================================================
-       7. INTERACTIVE CLI TERMINAL (interactive_shell.sh)
+       8. INTERACTIVE CLI TERMINAL (interactive_shell.sh)
        ========================================================================== */
     function initInteractiveShell() {
         const modal = document.getElementById('cliModal');
@@ -403,15 +447,28 @@
                 case 'help':
                     appendLine(`
 Available commands:
-  <b style="color:#22c55e;">platforms</b>            - List supported platforms & native targets
-  <b style="color:#22c55e;">download &lt;os&gt;</b>       - Trigger installer payload (android | tv | fire | win)
-  <b style="color:#22c55e;">stats</b>                - Show engine stream telemetry
-  <b style="color:#22c55e;">specs</b>                - Video decoding & GPU pipeline details
-  <b style="color:#22c55e;">matrix</b>               - Wake up, Neo...
-  <b style="color:#22c55e;">about</b>                - Core architecture manifesto
-  <b style="color:#22c55e;">clear</b>                - Clear shell buffer
-  <b style="color:#22c55e;">exit</b>                 - Close terminal
+  <b style="color:#818cf8;">platforms</b>            - List supported platforms & native targets
+  <b style="color:#818cf8;">theme &lt;dark|light&gt;</b>   - Switch site visual color theme
+  <b style="color:#818cf8;">download &lt;os&gt;</b>       - Trigger installer payload (android | tv | fire | win)
+  <b style="color:#818cf8;">stats</b>                - Show engine stream telemetry
+  <b style="color:#818cf8;">specs</b>                - Video decoding & GPU pipeline details
+  <b style="color:#818cf8;">matrix</b>               - Wake up, Neo...
+  <b style="color:#818cf8;">about</b>                - Core architecture manifesto
+  <b style="color:#818cf8;">clear</b>                - Clear shell buffer
+  <b style="color:#818cf8;">exit</b>                 - Close terminal
                     `);
+                    break;
+
+                case 'theme':
+                    if (arg === 'light' || arg === 'dark') {
+                        window.__animetv_setTheme(arg);
+                        appendLine(`✔ Switched theme to [${arg.toUpperCase()}] mode`, 'success');
+                    } else if (arg === 'toggle' || !arg) {
+                        window.__animetv_toggleTheme();
+                        appendLine(`✔ Toggled visual theme`, 'success');
+                    } else {
+                        appendLine(`Usage: theme &lt;dark | light | toggle&gt;`, 'error');
+                    }
                     break;
 
                 case 'platforms':
@@ -473,7 +530,7 @@ Video Decoding Pipeline:
                     break;
 
                 default:
-                    appendLine(`Command not recognized: '${escapeHTML(cmd)}'. Type <b style="color:#22c55e;">help</b> for commands.`, 'error');
+                    appendLine(`Command not recognized: '${escapeHTML(cmd)}'. Type <b style="color:#818cf8;">help</b> for commands.`, 'error');
             }
         }
 
@@ -498,6 +555,7 @@ Video Decoding Pipeline:
 
     // Initialize all components
     function bootstrap() {
+        initThemeEngine();
         initCustomCursor();
         initInteractiveBackground();
         initScrollReveals();

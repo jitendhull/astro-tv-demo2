@@ -1,36 +1,45 @@
 /* ==========================================================================
-   ANIME TV — EDITORIAL DARK-TECH DESIGN SYSTEM
-   Inspired by ankitgupta.com.np & WWDC Apple Design Craft
+   ANIME TV — LUXURY DUAL-THEME DESIGN SYSTEM (DARK & LIGHT)
+   Electric Indigo / Cyber Cyan Editorial Architecture
    ========================================================================== */
 
-:root {
-    /* Color Palette — Warm Obsidian & Emerald Slate */
-    --bg-base: #0c0f0d;
-    --bg-surface: #111513;
-    --bg-card: rgba(18, 24, 20, 0.72);
-    --bg-card-hover: rgba(24, 34, 28, 0.88);
-    --bg-active: #15271c;
-    --bg-terminal: rgba(9, 14, 11, 0.96);
+:root,
+:root[data-theme="dark"] {
+    /* DARK THEME TOKENS — Midnight Obsidian & Electric Indigo */
+    --bg-base: #0a0c12;
+    --bg-surface: #101420;
+    --bg-card: rgba(18, 23, 35, 0.72);
+    --bg-card-hover: rgba(26, 33, 50, 0.88);
+    --bg-active: #1a2238;
+    --bg-terminal: rgba(10, 13, 20, 0.96);
+    --bg-code: #07090f;
+    --bg-header: rgba(10, 12, 18, 0.82);
 
-    --accent: #22c55e;
-    --accent-hover: #4ade80;
-    --accent-glow: rgba(34, 197, 94, 0.16);
-    --accent-glow-strong: rgba(34, 197, 94, 0.30);
-    --accent-text: #021206;
+    --accent: #6366f1;
+    --accent-hover: #818cf8;
+    --accent-glow: rgba(99, 102, 241, 0.18);
+    --accent-glow-strong: rgba(99, 102, 241, 0.35);
+    --accent-text: #ffffff;
+    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
 
-    --android-color: #3ddc84;
-    --tv-color: #38bdf8;
-    --fire-color: #f97316;
-    --windows-color: #00a4ef;
+    --android-color: #38bdf8;
+    --tv-color: #818cf8;
+    --fire-color: #f43f5e;
+    --windows-color: #0ea5e9;
 
-    --text-primary: #f2f7f4;
-    --text-secondary: #96a599;
-    --text-tertiary: #5c6c60;
-    --text-mono: #86efac;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+    --text-mono: #a5b4fc;
 
-    --border-subtle: rgba(255, 255, 255, 0.07);
-    --border-card: rgba(34, 197, 94, 0.18);
-    --border-active: #22c55e;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-card: rgba(99, 102, 241, 0.2);
+    --border-active: #6366f1;
+    --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+    --canvas-particle: rgba(129, 140, 248, 0.35);
+    --canvas-line: rgba(99, 102, 241, 0.14);
+    --grain-opacity: 0.035;
 
     /* Motion Tokens */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -48,6 +57,44 @@
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
+:root[data-theme="light"] {
+    /* LIGHT THEME TOKENS — Crisp Porcelain & Royal Indigo */
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.88);
+    --bg-card-hover: #ffffff;
+    --bg-active: #eef2ff;
+    --bg-terminal: rgba(15, 23, 42, 0.96);
+    --bg-code: #0f172a;
+    --bg-header: rgba(248, 250, 252, 0.85);
+
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --accent-glow: rgba(79, 70, 229, 0.15);
+    --accent-glow-strong: rgba(79, 70, 229, 0.28);
+    --accent-text: #ffffff;
+    --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #0284c7 100%);
+
+    --android-color: #0284c7;
+    --tv-color: #4f46e5;
+    --fire-color: #e11d48;
+    --windows-color: #0284c7;
+
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #94a3b8;
+    --text-mono: #4338ca;
+
+    --border-subtle: rgba(15, 23, 42, 0.09);
+    --border-card: rgba(79, 70, 229, 0.25);
+    --border-active: #4f46e5;
+    --shadow-card: 0 16px 40px rgba(15, 23, 42, 0.08);
+
+    --canvas-particle: rgba(79, 70, 229, 0.25);
+    --canvas-line: rgba(79, 70, 229, 0.08);
+    --grain-opacity: 0.02;
+}
+
 /* ==========================================================================
    RESET & FOUNDATIONS
    ========================================================================== */
@@ -60,8 +107,9 @@
 
 html {
     scroll-behavior: smooth;
-    color-scheme: dark;
     background-color: var(--bg-base);
+    transition: background-color var(--dur-normal) var(--ease-out),
+                color var(--dur-normal) var(--ease-out);
 }
 
 body {
@@ -73,6 +121,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     position: relative;
+    transition: background-color var(--dur-normal) var(--ease-out),
+                color var(--dur-normal) var(--ease-out);
 }
 
 a {
@@ -94,7 +144,7 @@ button {
     outline-offset: 3px;
 }
 
-/* Skip to Content */
+/* Skip Link */
 .skip-link {
     position: absolute;
     top: -100px;
@@ -113,7 +163,7 @@ button {
 }
 
 /* ==========================================================================
-   CUSTOM CURSOR (ankitgupta.com.np signature)
+   CUSTOM CURSOR
    ========================================================================== */
 
 @media (hover: hover) and (pointer: fine) {
@@ -140,7 +190,7 @@ button {
         z-index: 100000;
         transform: translate(-50%, -50%);
         transition: opacity var(--dur-fast) ease, transform 60ms linear;
-        box-shadow: 0 0 10px var(--accent);
+        box-shadow: 0 0 12px var(--accent);
     }
 
     .custom-cursor-ring {
@@ -149,11 +199,12 @@ button {
         left: 0;
         width: 34px;
         height: 34px;
-        border: 1px solid rgba(34, 197, 94, 0.45);
+        border: 1px solid var(--accent);
         border-radius: 50%;
         pointer-events: none;
         z-index: 99999;
         transform: translate(-50%, -50%);
+        opacity: 0.6;
         transition: width 200ms var(--ease-out),
                     height 200ms var(--ease-out),
                     border-color 200ms var(--ease-out),
@@ -164,7 +215,7 @@ button {
         width: 52px;
         height: 52px;
         border-color: var(--accent);
-        background-color: rgba(34, 197, 94, 0.08);
+        background-color: var(--accent-glow);
         box-shadow: 0 0 20px var(--accent-glow);
     }
 
@@ -182,7 +233,7 @@ button {
 }
 
 /* ==========================================================================
-   INTERACTIVE CANVAS BACKGROUND & GRAIN
+   CANVAS BACKGROUND & GRAIN
    ========================================================================== */
 
 .bg-canvas {
@@ -204,8 +255,8 @@ button {
     height: 100vh;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.03;
-    background-image: radial-gradient(#fff 1px, transparent 1px);
+    opacity: var(--grain-opacity);
+    background-image: radial-gradient(var(--text-primary) 1px, transparent 1px);
     background-size: 24px 24px;
 }
 
@@ -238,11 +289,13 @@ button {
     height: 72px;
     display: flex;
     align-items: center;
-    background: rgba(12, 15, 13, 0.82);
+    background: var(--bg-header);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid var(--border-subtle);
     z-index: 1000;
+    transition: background-color var(--dur-normal) var(--ease-out),
+                border-color var(--dur-normal) var(--ease-out);
 }
 
 .header-inner {
@@ -278,8 +331,8 @@ button {
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: var(--accent-glow);
+    border: 1px solid var(--border-card);
     border-radius: 8px;
     font-family: var(--font-mono);
     font-size: 12px;
@@ -305,8 +358,8 @@ button {
     align-items: center;
     gap: 7px;
     padding: 4px 10px;
-    background: rgba(34, 197, 94, 0.08);
-    border: 1px solid rgba(34, 197, 94, 0.22);
+    background: var(--accent-glow);
+    border: 1px solid var(--border-card);
     border-radius: 20px;
     font-size: 11.5px;
     font-weight: 600;
@@ -356,7 +409,43 @@ button {
 .right-nav {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    transition: color var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out),
+                background-color var(--dur-fast) var(--ease-out),
+                transform var(--dur-press) var(--ease-out);
+}
+
+.theme-toggle-btn:active {
+    transform: scale(0.95);
+}
+
+/* Toggle Sun/Moon icon visibility based on data-theme */
+[data-theme="dark"] .theme-toggle-btn .sun-icon {
+    display: block;
+}
+[data-theme="dark"] .theme-toggle-btn .moon-icon {
+    display: none;
+}
+
+[data-theme="light"] .theme-toggle-btn .sun-icon {
+    display: none;
+}
+[data-theme="light"] .theme-toggle-btn .moon-icon {
+    display: block;
 }
 
 .cli-trigger-btn {
@@ -364,7 +453,7 @@ button {
     align-items: center;
     gap: 7px;
     padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
     font-family: var(--font-mono);
@@ -388,7 +477,7 @@ button {
 .cli-kbd {
     padding: 2px 5px;
     font-size: 10.5px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(125, 125, 125, 0.12);
     border-radius: 4px;
     color: var(--text-tertiary);
 }
@@ -400,7 +489,7 @@ button {
     width: 34px;
     height: 34px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     color: var(--text-secondary);
     transition: border-color var(--dur-fast) var(--ease-out),
@@ -466,10 +555,10 @@ button {
     font-size: 12.5px;
     font-weight: 600;
     color: var(--accent);
-    background: rgba(34, 197, 94, 0.08);
+    background: var(--accent-glow);
     padding: 4px 12px;
     border-radius: 20px;
-    border: 1px solid rgba(34, 197, 94, 0.25);
+    border: 1px solid var(--border-card);
 }
 
 .meta-tag {
@@ -513,7 +602,7 @@ button {
     font-weight: 400;
     letter-spacing: -0.02em;
     color: var(--accent);
-    background: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+    background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -568,10 +657,11 @@ button {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .action-tertiary {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     color: var(--text-secondary);
 }
@@ -592,6 +682,7 @@ button {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     transition: border-color var(--dur-fast) var(--ease-out),
                 transform var(--dur-fast) var(--ease-out);
 }
@@ -621,7 +712,7 @@ button {
     border: 1px solid var(--border-subtle);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 50px var(--accent-glow);
+    box-shadow: var(--shadow-card), 0 0 50px var(--accent-glow);
     transition: transform var(--dur-normal) var(--ease-out),
                 box-shadow var(--dur-normal) var(--ease-out);
 }
@@ -631,7 +722,7 @@ button {
     align-items: center;
     gap: 8px;
     padding: 12px 18px;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.25);
     border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -649,7 +740,7 @@ button {
 
 .mac-dot.red { background: #ef4444; }
 .mac-dot.yellow { background: #eab308; }
-.mac-dot.green { background: #22c55e; }
+.mac-dot.green { background: #10b981; }
 
 .artwork-title-code {
     font-family: var(--font-mono);
@@ -663,8 +754,8 @@ button {
     font-family: var(--font-mono);
     font-size: 10.5px;
     padding: 2px 7px;
-    background: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.25);
+    background: var(--accent-glow);
+    border: 1px solid var(--border-card);
     color: var(--accent);
     border-radius: 4px;
 }
@@ -693,7 +784,7 @@ button {
     pointer-events: none;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
     background-size: 100% 3px, 6px 100%;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 .player-hud-overlay {
@@ -718,8 +809,8 @@ button {
 
 .live-chip {
     background: rgba(0, 0, 0, 0.65);
-    color: var(--accent);
-    border: 1px solid rgba(34, 197, 94, 0.35);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.35);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -736,7 +827,7 @@ button {
     align-items: center;
     justify-content: space-between;
     padding: 14px 18px;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.1);
     border-top: 1px solid var(--border-subtle);
 }
 
@@ -755,10 +846,10 @@ button {
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--accent);
-    background: rgba(34, 197, 94, 0.08);
+    background: var(--accent-glow);
     padding: 3px 8px;
     border-radius: 4px;
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    border: 1px solid var(--border-card);
     display: flex;
     align-items: center;
     gap: 5px;
@@ -771,7 +862,7 @@ button {
 .ticker-banner-wrap {
     width: 100%;
     overflow: hidden;
-    background: #090c0a;
+    background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
     border-bottom: 1px solid var(--border-subtle);
     padding: 12px 0;
@@ -859,6 +950,7 @@ button {
     border-radius: 16px;
     padding: 22px 20px;
     text-align: left;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
     transition: border-color var(--dur-fast) var(--ease-out),
                 background-color var(--dur-fast) var(--ease-out),
                 box-shadow var(--dur-fast) var(--ease-out),
@@ -900,7 +992,7 @@ button {
     width: 38px;
     height: 38px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--accent-glow);
     border: 1px solid var(--border-subtle);
     flex-shrink: 0;
 }
@@ -933,15 +1025,15 @@ button {
     font-family: var(--font-mono);
     font-size: 11px;
     padding: 2px 7px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(125, 125, 125, 0.08);
     border: 1px solid var(--border-subtle);
     border-radius: 4px;
     color: var(--text-tertiary);
 }
 
 .platform-tab-card.active .meta-pill {
-    background: rgba(34, 197, 94, 0.1);
-    border-color: rgba(34, 197, 94, 0.25);
+    background: var(--accent-glow);
+    border-color: var(--border-card);
     color: var(--accent);
 }
 
@@ -952,7 +1044,7 @@ button {
     border-radius: 20px;
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-card);
 }
 
 .showroom-track {
@@ -974,8 +1066,8 @@ button {
     font-family: var(--font-mono);
     font-size: 11.5px;
     color: var(--accent);
-    background: rgba(34, 197, 94, 0.08);
-    border: 1px solid rgba(34, 197, 94, 0.22);
+    background: var(--accent-glow);
+    border: 1px solid var(--border-card);
     padding: 4px 12px;
     border-radius: 20px;
     margin-bottom: 20px;
@@ -988,7 +1080,7 @@ button {
     width: 88px;
     height: 88px;
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--accent-glow);
     border: 1px solid var(--border-subtle);
     margin-bottom: 20px;
 }
@@ -1069,7 +1161,7 @@ button {
     display: inline-flex;
     align-items: center;
     padding: 11px 16px;
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
     font-family: var(--font-mono);
@@ -1101,6 +1193,7 @@ button {
     padding: 32px 28px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
     transition: border-color var(--dur-fast) var(--ease-out),
                 transform var(--dur-fast) var(--ease-out);
 }
@@ -1168,6 +1261,7 @@ button {
     border: 1px solid var(--border-subtle);
     border-radius: 18px;
     padding: 36px 32px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
 }
 
 .features-brick-title {
@@ -1197,8 +1291,8 @@ button {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: var(--accent-glow);
+    border: 1px solid var(--border-card);
     color: var(--accent);
     flex-shrink: 0;
     margin-top: 2px;
@@ -1226,6 +1320,7 @@ button {
     padding: 36px 30px;
     display: flex;
     flex-direction: column;
+    box-shadow: var(--shadow-card);
 }
 
 .eco-badge {
@@ -1235,8 +1330,8 @@ button {
     font-weight: 700;
     text-transform: uppercase;
     color: var(--accent);
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.25);
+    background: var(--accent-glow);
+    border: 1px solid var(--border-card);
     padding: 3px 8px;
     border-radius: 4px;
     margin-bottom: 16px;
@@ -1257,7 +1352,7 @@ button {
 }
 
 .eco-terminal-box {
-    background: #050806;
+    background: var(--bg-code);
     border: 1px solid var(--border-subtle);
     border-radius: 10px;
     padding: 16px;
@@ -1269,10 +1364,10 @@ button {
     margin-top: auto;
 }
 
-.term-comment { color: var(--text-tertiary); }
-.term-line { color: var(--text-primary); }
+.term-comment { color: #64748b; }
+.term-line { color: #f8fafc; }
 .term-prompt { color: var(--accent); font-weight: 700; }
-.term-output { color: var(--text-mono); }
+.term-output { color: #38bdf8; }
 
 /* ==========================================================================
    MANIFESTO SECTION (Editorial Quote)
@@ -1280,7 +1375,7 @@ button {
 
 .manifesto-wrap {
     padding: 80px clamp(16px, 4vw, 40px);
-    background: linear-gradient(180deg, var(--bg-base) 0%, #101412 50%, var(--bg-base) 100%);
+    background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
     border-bottom: 1px solid var(--border-subtle);
     position: relative;
@@ -1326,6 +1421,7 @@ button {
     border: 1px solid var(--border-subtle);
     border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
     transition: border-color var(--dur-fast) var(--ease-out),
                 background-color var(--dur-fast) var(--ease-out);
 }
@@ -1431,7 +1527,7 @@ button {
     max-width: 760px;
     height: 480px;
     background: var(--bg-terminal);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    border: 1px solid var(--border-card);
     border-radius: 14px;
     display: flex;
     flex-direction: column;
@@ -1449,7 +1545,7 @@ button {
     display: flex;
     align-items: center;
     padding: 10px 16px;
-    background: #050806;
+    background: rgba(0, 0, 0, 0.35);
     border-bottom: 1px solid var(--border-subtle);
     font-family: var(--font-mono);
     font-size: 12px;
@@ -1471,7 +1567,7 @@ button {
 
 .cli-win-btn.close { background: #ef4444; }
 .cli-win-btn.minimize { background: #eab308; }
-.cli-win-btn.expand { background: #22c55e; }
+.cli-win-btn.expand { background: #10b981; }
 
 .cli-window-title {
     margin-left: 16px;
@@ -1491,14 +1587,14 @@ button {
     overflow-y: auto;
     font-family: var(--font-mono);
     font-size: 13px;
-    color: var(--text-primary);
+    color: #f8fafc;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
 .cli-line.banner {
-    color: var(--text-mono);
+    color: #818cf8;
 }
 
 .cli-line.command {
@@ -1511,7 +1607,7 @@ button {
 }
 
 .cli-line.success {
-    color: #4ade80;
+    color: #38bdf8;
 }
 
 .cli-input-line {
@@ -1519,7 +1615,7 @@ button {
     align-items: center;
     gap: 8px;
     padding: 12px 16px;
-    background: #050806;
+    background: rgba(0, 0, 0, 0.4);
     border-top: 1px solid var(--border-subtle);
     font-family: var(--font-mono);
 }
@@ -1546,7 +1642,7 @@ button {
    ========================================================================== */
 
 #site-footer {
-    background: #060907;
+    background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
     padding: 70px clamp(16px, 4vw, 40px) 40px;
     position: relative;
@@ -1584,8 +1680,8 @@ button {
     font-family: var(--font-mono);
     font-size: 11.5px;
     color: var(--accent);
-    background: rgba(34, 197, 94, 0.08);
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    background: var(--accent-glow);
+    border: 1px solid var(--border-card);
     padding: 4px 10px;
     border-radius: 6px;
 }
@@ -1644,7 +1740,7 @@ button {
     align-items: center;
     justify-content: space-between;
     padding-top: 28px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid var(--border-subtle);
     font-size: 13px;
     color: var(--text-tertiary);
 }
@@ -1667,16 +1763,21 @@ button {
         color: var(--accent);
     }
 
+    .theme-toggle-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
     .cli-trigger-btn:hover {
-        border-color: rgba(34, 197, 94, 0.4);
+        border-color: var(--accent);
         color: var(--text-primary);
-        background: rgba(34, 197, 94, 0.08);
+        background: var(--accent-glow);
     }
 
     .nav-icon-link:hover {
-        border-color: rgba(34, 197, 94, 0.35);
-        color: var(--text-primary);
-        background: rgba(34, 197, 94, 0.08);
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-glow);
     }
 
     .nav-download-btn:hover,
@@ -1693,18 +1794,18 @@ button {
     }
 
     .action-tertiary:hover {
-        border-color: rgba(255, 255, 255, 0.2);
+        border-color: var(--border-card);
         color: var(--text-primary);
     }
 
     .stat-metric-item:hover {
-        border-color: rgba(34, 197, 94, 0.25);
+        border-color: var(--border-card);
         transform: translateY(-2px);
     }
 
     .artwork-museum-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 60px var(--accent-glow-strong);
+        box-shadow: var(--shadow-card), 0 0 60px var(--accent-glow-strong);
     }
 
     .artwork-museum-card:hover .artwork-img {
@@ -1719,7 +1820,7 @@ button {
 
     .cli-copy-btn:hover {
         border-color: var(--accent);
-        background: rgba(34, 197, 94, 0.08);
+        background: var(--accent-glow);
     }
 
     .arch-brick:hover {
@@ -1728,7 +1829,7 @@ button {
     }
 
     .faq-card:hover:not([open]) {
-        border-color: rgba(255, 255, 255, 0.14);
+        border-color: var(--border-card);
     }
 
     .footer-shell-btn:hover {
