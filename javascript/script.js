@@ -1,18 +1,17 @@
 /**
- * Anime TV — Interactive Controller, Ambient Canvas & Dual-Theme Engine
- * Inspired by ankitgupta.com.np & WWDC Apple Design Craft
+ * Anime TV — Apple Design & Fluid Animation Engine
+ * WWDC 2018 Fluid Interfaces & Emil Kowalski Craft
  */
 (() => {
     'use strict';
 
     /* ==========================================================================
-       1. DUAL-THEME CONTROLLER (Dark / Light Mode)
+       1. DUAL-THEME ENGINE (Dark / Light Mode with Instant Feedback)
        ========================================================================== */
     function initThemeEngine() {
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         const root = document.documentElement;
 
-        // Retrieve saved theme or detect system preference
         const savedTheme = localStorage.getItem('animetv_theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'dark');
@@ -23,13 +22,11 @@
             root.setAttribute('data-theme', theme);
             localStorage.setItem('animetv_theme', theme);
 
-            // Update theme color meta tag
             const metaTheme = document.querySelector('meta[name="theme-color"]');
             if (metaTheme) {
                 metaTheme.setAttribute('content', theme === 'dark' ? '#0a0c12' : '#f8fafc');
             }
 
-            // Dispatch custom event for canvas re-theming
             window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
         }
 
@@ -41,13 +38,161 @@
 
         themeToggleBtn?.addEventListener('click', toggleTheme);
 
-        // Export helper for terminal shell
         window.__animetv_setTheme = setTheme;
         window.__animetv_toggleTheme = toggleTheme;
     }
 
     /* ==========================================================================
-       2. CUSTOM SMOOTH CURSOR (Lag + Hover Magnetism)
+       2. APPLE CARD SPOTLIGHT BEAM (Pointer-Follow Glow on Card Borders)
+       ========================================================================== */
+    function initAppleSpotlights() {
+        const cards = document.querySelectorAll('.spotlight-card');
+        if (!cards.length || window.matchMedia('(hover: none)').matches) return;
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                card.style.setProperty('--spotlight-x', `${x}px`);
+                card.style.setProperty('--spotlight-y', `${y}px`);
+                card.style.setProperty('--spotlight-opacity', '1');
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--spotlight-opacity', '0');
+            });
+        });
+    }
+
+    /* ==========================================================================
+       3. APPLE MAGNETIC BUTTON ATTRACTION (WWDC Fluid Interfaces)
+       ========================================================================== */
+    function initMagneticTargets() {
+        const targets = document.querySelectorAll('.magnetic-target');
+        if (!targets.length || window.matchMedia('(hover: none)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        targets.forEach(target => {
+            target.addEventListener('mousemove', (e) => {
+                const rect = target.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                const deltaX = (e.clientX - centerX) * 0.22;
+                const deltaY = (e.clientY - centerY) * 0.22;
+
+                target.style.transform = `translate3d(${deltaX.toFixed(2)}px, ${deltaY.toFixed(2)}px, 0)`;
+            });
+
+            target.addEventListener('mouseleave', () => {
+                target.style.transform = 'translate3d(0, 0, 0)';
+                target.style.transition = 'transform 350ms cubic-bezier(0.34, 1.35, 0.64, 1)';
+                setTimeout(() => { target.style.transition = ''; }, 350);
+            });
+        });
+    }
+
+    /* ==========================================================================
+       4. APPLE TV INTERACTIVE QUICKTIME SCRUBBER & PLAYER
+       ========================================================================== */
+    function initAppleTVPlayer() {
+        const playbackBar = document.getElementById('playerPlaybackBar');
+        const playBtn = document.getElementById('playerPlayBtn');
+        const timeDisplay = document.getElementById('playerTime');
+        const scrubberTrack = document.getElementById('playerScrubberTrack');
+        const progressBar = document.getElementById('playerScrubberProgress');
+        const thumb = document.getElementById('playerScrubberThumb');
+
+        if (!playbackBar || !playBtn || !scrubberTrack || !progressBar || !thumb) return;
+
+        let isPlaying = false;
+        let currentTimeSec = 258; // 04:18
+        const totalDurationSec = 1440; // 24:00
+        let playInterval = null;
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function updateUI() {
+            const pct = (currentTimeSec / totalDurationSec) * 100;
+            progressBar.style.width = `${pct}%`;
+            thumb.style.left = `${pct}%`;
+            timeDisplay.textContent = `${formatTime(currentTimeSec)} / ${formatTime(totalDurationSec)}`;
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            playbackBar.classList.toggle('is-playing', isPlaying);
+
+            if (isPlaying) {
+                playInterval = setInterval(() => {
+                    currentTimeSec += 1;
+                    if (currentTimeSec >= totalDurationSec) {
+                        currentTimeSec = 0;
+                    }
+                    updateUI();
+                }, 1000);
+            } else {
+                clearInterval(playInterval);
+            }
+        }
+
+        playBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePlay();
+        });
+
+        // Direct Scrubber Manipulation (Click & Drag)
+        function seekFromEvent(e) {
+            const rect = scrubberTrack.getBoundingClientRect();
+            let pos = (e.clientX - rect.left) / rect.width;
+            pos = Math.max(0, Math.min(1, pos));
+            currentTimeSec = Math.floor(pos * totalDurationSec);
+            updateUI();
+        }
+
+        let isDragging = false;
+
+        scrubberTrack.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            scrubberTrack.setPointerCapture(e.pointerId);
+            seekFromEvent(e);
+        });
+
+        scrubberTrack.addEventListener('pointermove', (e) => {
+            if (isDragging) seekFromEvent(e);
+        });
+
+        scrubberTrack.addEventListener('pointerup', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                scrubberTrack.releasePointerCapture(e.pointerId);
+            }
+        });
+    }
+
+    /* ==========================================================================
+       5. DYNAMIC TRANSLUCENT HEADER ON SCROLL (macOS / iOS Navigation Bar)
+       ========================================================================== */
+    function initHeaderScrollEffect() {
+        const header = document.getElementById('site-header');
+        if (!header) return;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 24) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }, { passive: true });
+    }
+
+    /* ==========================================================================
+       6. CUSTOM SMOOTH CURSOR (Lag + Hover Magnetism)
        ========================================================================== */
     function initCustomCursor() {
         const dot = document.getElementById('cursorDot');
@@ -74,7 +219,6 @@
             }
         });
 
-        // Smooth Lerp loop for trailing outer ring
         function renderCursorRing() {
             ringX += (mouseX - ringX) * 0.18;
             ringY += (mouseY - ringY) * 0.18;
@@ -85,14 +229,12 @@
         }
         requestAnimationFrame(renderCursorRing);
 
-        // Hover expansions on interactive controls
-        const interactives = 'a, button, [role="tab"], summary, input, .stat-metric-item, .arch-brick, .features-brick';
+        const interactives = 'a, button, [role="tab"], summary, input, .stat-metric-item, .arch-brick, .features-brick, .player-scrubber-track';
         document.querySelectorAll(interactives).forEach(el => {
             el.addEventListener('mouseenter', () => ring.classList.add('cursor-hover'));
             el.addEventListener('mouseleave', () => ring.classList.remove('cursor-hover'));
         });
 
-        // Hide when mouse leaves window
         document.addEventListener('mouseleave', () => {
             dot.classList.add('cursor-hidden');
             ring.classList.add('cursor-hidden');
@@ -105,7 +247,7 @@
     }
 
     /* ==========================================================================
-       3. INTERACTIVE AMBIENT CANVAS BACKGROUND (Theme-Adaptive)
+       7. INTERACTIVE AMBIENT CANVAS BACKGROUND (Theme-Adaptive)
        ========================================================================== */
     function initInteractiveBackground() {
         const canvas = document.getElementById('bgCanvas');
@@ -161,7 +303,6 @@
                 if (this.y < 0) this.y = height;
                 if (this.y > height) this.y = 0;
 
-                // Mouse subtle repulsion
                 if (mouse.active) {
                     const dx = this.x - mouse.x;
                     const dy = this.y - mouse.y;
@@ -240,7 +381,7 @@
     }
 
     /* ==========================================================================
-       4. SMOOTH SCROLL REVEAL OBSERVER
+       8. SMOOTH SCROLL REVEAL OBSERVER (Apple Fluid Deceleration)
        ========================================================================== */
     function initScrollReveals() {
         const reveals = document.querySelectorAll('.reveal-on-scroll');
@@ -267,7 +408,7 @@
     }
 
     /* ==========================================================================
-       5. PLATFORM SHOWROOM TABS
+       9. PLATFORM SHOWROOM TABS
        ========================================================================== */
     function initPlatformShowroom() {
         const tabList = document.querySelector('[role="tablist"]');
@@ -333,7 +474,7 @@
     }
 
     /* ==========================================================================
-       6. COPY TO CLIPBOARD BUTTONS
+       10. COPY TO CLIPBOARD BUTTONS
        ========================================================================== */
     function initCopyButtons() {
         document.querySelectorAll('.cli-copy-btn').forEach(btn => {
@@ -358,7 +499,7 @@
     }
 
     /* ==========================================================================
-       7. 3D ARTWORK CARD TILT (Emil Kowalski craft)
+       11. 3D ARTWORK CARD TILT (Emil Kowalski craft)
        ========================================================================== */
     function initArtworkTilt() {
         const card = document.getElementById('artworkCard');
@@ -381,7 +522,7 @@
     }
 
     /* ==========================================================================
-       8. INTERACTIVE CLI TERMINAL (interactive_shell.sh)
+       12. INTERACTIVE CLI TERMINAL (interactive_shell.sh)
        ========================================================================== */
     function initInteractiveShell() {
         const modal = document.getElementById('cliModal');
@@ -553,9 +694,13 @@ Video Decoding Pipeline:
         });
     }
 
-    // Initialize all components
+    // Bootstrap all modules
     function bootstrap() {
         initThemeEngine();
+        initAppleSpotlights();
+        initMagneticTargets();
+        initAppleTVPlayer();
+        initHeaderScrollEffect();
         initCustomCursor();
         initInteractiveBackground();
         initScrollReveals();
