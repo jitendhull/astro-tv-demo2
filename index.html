@@ -4,13 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Anime TV - Free, open-source, and ad-free anime streaming application for Android, Android TV, Fire TV, and Windows.">
-    <meta name="theme-color" content="#050806">
+    <meta name="description" content="Anime TV — Free, open-source, high-performance ad-free anime streaming for Android, Android TV, Fire TV, and Windows.">
+    <meta name="theme-color" content="#060907">
 
     <title>Anime TV — Watch Anime. Skip the Ads.</title>
 
     <!-- FAVICON -->
     <link rel="shortcut icon" href="images/avengers.png" type="image/png">
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
@@ -20,300 +25,683 @@
 </head>
 
 <body>
+    <!-- AMBIENT BACKGROUND GLOW & GRAIN -->
+    <div class="ambient-glow glow-1" aria-hidden="true"></div>
+    <div class="ambient-glow glow-2" aria-hidden="true"></div>
+    <div class="grain-overlay" aria-hidden="true"></div>
+
     <!-- SKIP LINK -->
-    <a href="#home" class="skip-link">Skip to content</a>
+    <a href="#main" class="skip-link">Skip to main content</a>
 
     <!-- ==================================================
          HEADER
     =================================================== -->
-    <header>
-        <!-- LOGO -->
-        <a href="#home" class="logo" aria-label="Anime TV Home">
-            <img src="images/animetv-logo-removebg-preview.png" alt="Anime TV Logo" width="115" height="40">
-        </a>
+    <header id="site-header">
+        <div class="header-inner">
+            <!-- LOGO & LIVE STATUS -->
+            <div class="header-brand">
+                <a href="#home" class="logo" aria-label="Anime TV Home">
+                    <img src="images/animetv-logo-removebg-preview.png" alt="Anime TV" width="110" height="36">
+                </a>
+                <div class="status-pill" title="Live Scraping Sources Operational">
+                    <span class="status-dot"></span>
+                    <span class="status-text">v3.3.0 Stable</span>
+                </div>
+            </div>
 
-        <!-- MAIN NAVIGATION -->
-        <nav class="main-nav" aria-label="Primary navigation">
-            <a href="#home">Home</a>
-            <a href="#platforms">Platforms</a>
-            <a href="#integration">Integration</a>
-            <a href="#faq">FAQ</a>
-        </nav>
+            <!-- MAIN NAVIGATION -->
+            <nav class="main-nav" aria-label="Primary navigation">
+                <a href="#home"><span class="nav-num">01</span> Overview</a>
+                <a href="#platforms"><span class="nav-num">02</span> Platforms</a>
+                <a href="#architecture"><span class="nav-num">03</span> Architecture</a>
+                <a href="#living-room"><span class="nav-num">04</span> TV Features</a>
+                <a href="#faq"><span class="nav-num">05</span> FAQ</a>
+            </nav>
 
-        <!-- RIGHT NAVIGATION -->
-        <nav class="right-nav" aria-label="Social and downloads">
-            <!-- GITHUB -->
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="github-link">
-                <img src="images/icons8-github-50.png" alt="" aria-hidden="true" width="20" height="20">
-                <span>GitHub</span>
-            </a>
+            <!-- RIGHT NAVIGATION -->
+            <div class="right-nav">
+                <!-- CLI LAUNCH BUTTON -->
+                <button type="button" class="cli-trigger-btn" id="cliTriggerBtn" aria-label="Open Interactive Terminal" title="Press ` or Cmd+K">
+                    <span class="cli-icon" aria-hidden="true">&gt;_</span>
+                    <span class="cli-label">Shell</span>
+                    <kbd class="cli-kbd">⌘K</kbd>
+                </button>
 
-            <!-- DISCORD -->
-            <a href="https://discord.gg" target="_blank" rel="noopener noreferrer" class="discord-link">
-                <img src="images/icons8-discord-50.png" alt="" aria-hidden="true" width="20" height="20">
-                <span>Discord</span>
-            </a>
+                <!-- GITHUB -->
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="nav-icon-link" aria-label="GitHub Repository">
+                    <img src="images/icons8-github-50.png" alt="" aria-hidden="true" width="18" height="18">
+                </a>
 
-            <!-- DOWNLOAD -->
-            <a href="#platforms" class="download-btn">
-                Download
-            </a>
-        </nav>
+                <!-- DISCORD -->
+                <a href="https://discord.gg" target="_blank" rel="noopener noreferrer" class="nav-icon-link" aria-label="Discord Community">
+                    <img src="images/icons8-discord-50.png" alt="" aria-hidden="true" width="18" height="18">
+                </a>
+
+                <!-- DOWNLOAD CTA -->
+                <a href="#platforms" class="primary-download-btn">
+                    <span>Download</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                </a>
+            </div>
+        </div>
     </header>
 
     <!-- ==================================================
-         HOME / HERO
+         MAIN CONTENT
     =================================================== -->
-    <main id="home">
-        <!-- HERO CONTENT -->
-        <div class="hero-content">
-            <h1>
-                WATCH ANIME.<br>
-                <span>SKIP THE ADS.</span>
-            </h1>
+    <main id="main">
 
-            <h3>
-                Free open-source app for Android, Android TV, Fire TV, and Windows.
-            </h3>
+        <!-- ==============================================
+             HERO SECTION
+        =============================================== -->
+        <section id="home" class="hero-section">
+            <div class="hero-container">
+                
+                <!-- HERO HEADER & METADATA -->
+                <div class="hero-meta-bar">
+                    <span class="curated-badge">No. 01 &mdash; The Ad-Free Streaming Engine</span>
+                    <span class="meta-tag">Open Source &bull; MIT License</span>
+                    <span class="meta-tag">Zero Telemetry</span>
+                </div>
 
-            <div class="hero-cta-group">
-                <!-- ANDROID BUTTON -->
-                <a href="#platforms" class="btn btn-secondary" data-target-slide="0">
-                    <img src="images/icons8-download-32.png" alt="" aria-hidden="true" width="20" height="20">
-                    <span>Download for Android</span>
-                </a>
+                <div class="hero-grid">
+                    <!-- HERO LEFT TEXT -->
+                    <div class="hero-text-col">
+                        <h1 class="hero-title">
+                            WATCH ANIME.<br>
+                            <span class="title-gradient">SKIP THE ADS.</span>
+                        </h1>
 
-                <!-- WINDOWS BUTTON -->
-                <a href="#platforms" class="btn btn-secondary" data-target-slide="3">
-                    <img src="images/icons8-windows-11-50.png" alt="" aria-hidden="true" width="20" height="20">
-                    <span>Get for Windows</span>
-                </a>
+                        <p class="hero-description">
+                            A high-performance, distraction-free player engineered for big screens, phones, and desktops. No sponsor interruptions, no intrusive popups &mdash; just raw 4K playback and instant remote navigation.
+                        </p>
 
-                <!-- DISCORD BUTTON -->
-                <a href="https://discord.gg" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-                    <img src="images/icons8-discord-50.png" alt="" aria-hidden="true" width="20" height="20">
-                    <span>Join Discord</span>
-                </a>
-            </div>
-        </div>
+                        <!-- HERO ACTIONS -->
+                        <div class="hero-actions">
+                            <a href="#platforms" class="action-btn action-primary" data-target-slide="0">
+                                <img src="images/icons8-download-32.png" alt="" aria-hidden="true" width="18" height="18">
+                                <span>Get for Android</span>
+                            </a>
 
-        <!-- HERO IMAGE -->
-        <div class="hero-image-wrap">
-            <img class="hero-image" src="images/wp6439498-death-note-hd-desktop-wallpapers.jpg" alt="Death Note anime artwork preview" loading="eager" fetchpriority="high">
-        </div>
-    </main>
+                            <a href="#platforms" class="action-btn action-secondary" data-target-slide="3">
+                                <img src="images/icons8-windows-11-50.png" alt="" aria-hidden="true" width="18" height="18">
+                                <span>Windows App</span>
+                            </a>
 
-    <!-- ==================================================
-         PLATFORMS
-    =================================================== -->
-    <section id="platforms">
-        <div class="section-content">
-            <h2>Platforms</h2>
-            <p class="section-subtitle">
-                Anime TV is available across multiple platforms, making it easy to watch your favorite anime anywhere.
-            </p>
+                            <a href="https://discord.gg" target="_blank" rel="noopener noreferrer" class="action-btn action-tertiary">
+                                <img src="images/icons8-discord-50.png" alt="" aria-hidden="true" width="18" height="18">
+                                <span>Discord Community</span>
+                            </a>
+                        </div>
 
-            <!-- PLATFORM SELECTOR TABS -->
-            <div class="platform-list" role="tablist" aria-label="Select platform">
-                <!-- ANDROID -->
-                <button class="platform-card active" id="tab-0" role="tab" aria-selected="true" aria-controls="panel-0" tabindex="0" data-slide="0" type="button">
-                    <div class="platform-card-header">
-                        <img src="images/amdroid-removebg-preview.png" alt="" aria-hidden="true" width="32" height="32">
-                        <h3>Android</h3>
-                    </div>
-                    <p>Watch anime directly on your Android mobile device.</p>
-                </button>
-
-                <!-- ANDROID TV -->
-                <button class="platform-card" id="tab-1" role="tab" aria-selected="false" aria-controls="panel-1" tabindex="-1" data-slide="1" type="button">
-                    <div class="platform-card-header">
-                        <img src="images/android-tv-removebg-preview.png" alt="" aria-hidden="true" width="32" height="32">
-                        <h3>Android TV</h3>
-                    </div>
-                    <p>Enjoy anime on your television with remote navigation.</p>
-                </button>
-
-                <!-- FIRE TV -->
-                <button class="platform-card" id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" tabindex="-1" data-slide="2" type="button">
-                    <div class="platform-card-header">
-                        <img src="images/fire tv.png" alt="" aria-hidden="true" width="32" height="32">
-                        <h3>Fire TV</h3>
-                    </div>
-                    <p>Stream anime comfortably through your Fire TV device.</p>
-                </button>
-
-                <!-- WINDOWS -->
-                <button class="platform-card" id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" tabindex="-1" data-slide="3" type="button">
-                    <div class="platform-card-header">
-                        <img src="images/icons8-windows-11-50.png" alt="" aria-hidden="true" width="32" height="32">
-                        <h3>Windows</h3>
-                    </div>
-                    <p>Dedicated streaming and library experience for Windows PC.</p>
-                </button>
-            </div>
-
-            <!-- PLATFORM SLIDER PANELS -->
-            <div class="platform-slider">
-                <div class="platform-slides" id="platformSlides">
-                    <!-- ANDROID PANEL -->
-                    <div class="platform-slide" id="panel-0" role="tabpanel" aria-labelledby="tab-0" tabindex="0">
-                        <img src="images/amdroid-removebg-preview.png" alt="" aria-hidden="true" width="80" height="80">
-                        <h3>Anime TV for Android</h3>
-                        <p>Watch your favorite anime directly on your Android phone or tablet with high bitrate and hardware acceleration.</p>
-                        <a href="Iris-Installer-3.3.0.exe" class="download-btn">
-                            Download for Android
-                        </a>
+                        <!-- STATS BENTO -->
+                        <div class="stats-bento">
+                            <div class="stat-card">
+                                <span class="stat-value">0</span>
+                                <span class="stat-label">Ads or Trackers</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-value">4K</span>
+                                <span class="stat-label">60fps Leanback</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-value">4+</span>
+                                <span class="stat-label">Platforms Supported</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-value">100%</span>
+                                <span class="stat-label">Open Source</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- ANDROID TV PANEL -->
-                    <div class="platform-slide" id="panel-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0" hidden>
-                        <img src="images/android-tv-removebg-preview.png" alt="" aria-hidden="true" width="80" height="80">
-                        <h3>Anime TV for Android TV</h3>
-                        <p>Enjoy anime on your big screen with native leanback UI, smooth 4K playback, and full remote control navigation.</p>
-                        <a href="Iris-Installer-3.3.0.exe" class="download-btn">
-                            Download for Android TV
-                        </a>
-                    </div>
-
-                    <!-- FIRE TV PANEL -->
-                    <div class="platform-slide" id="panel-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0" hidden>
-                        <img src="images/fire tv.png" alt="" aria-hidden="true" width="80" height="80">
-                        <h3>Anime TV for Fire TV</h3>
-                        <p>Stream anime comfortably on Amazon Fire TV sticks and smart TVs with seamless remote integration.</p>
-                        <a href="Iris-Installer-3.3.0.exe" class="download-btn">
-                            Download for Fire TV
-                        </a>
-                    </div>
-
-                    <!-- WINDOWS PANEL -->
-                    <div class="platform-slide" id="panel-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0" hidden>
-                        <img src="images/icons8-windows-11-50.png" alt="" aria-hidden="true" width="80" height="80">
-                        <h3>Anime TV for Windows</h3>
-                        <p>Get a native, lightweight Anime TV client tailored for Windows with keyboard shortcuts and offline caching.</p>
-                        <a href="Iris-Installer-3.3.0.exe" class="download-btn">
-                            Download for Windows
-                        </a>
+                    <!-- HERO RIGHT SHOWCASE ARTWORK -->
+                    <div class="hero-showcase-col">
+                        <div class="artwork-card" id="artworkCard">
+                            <div class="artwork-header">
+                                <span class="artwork-dot red"></span>
+                                <span class="artwork-dot yellow"></span>
+                                <span class="artwork-dot green"></span>
+                                <span class="artwork-title">death_note_hd_preview.stream</span>
+                                <span class="artwork-tag">AV1 • 60 FPS</span>
+                            </div>
+                            <div class="artwork-media-wrap">
+                                <img class="artwork-img" src="images/wp6439498-death-note-hd-desktop-wallpapers.jpg" alt="Death Note Artwork in Anime TV Player" loading="eager" fetchpriority="high">
+                                <div class="player-overlay-hud">
+                                    <div class="hud-pill live-pill">
+                                        <span class="pulse-dot"></span> LIVE SOURCE
+                                    </div>
+                                    <div class="hud-pill quality-pill">4K UHD</div>
+                                </div>
+                            </div>
+                            <div class="artwork-footer">
+                                <div class="artwork-meta">
+                                    <span class="artwork-name">Anime TV Player Core v3.3</span>
+                                    <span class="artwork-sub">Multi-source fallback &bull; Hardware decode</span>
+                                </div>
+                                <div class="artwork-remote-badge">
+                                    <span>Remote Navigation Ready</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ANDROID TV & FIRE TV FEATURES -->
-            <div class="tv-features">
-                <h3>Living Room Features</h3>
-                <ul class="features-grid">
-                    <li>
-                        <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
-                        <span>Navigate with your TV remote</span>
-                    </li>
-                    <li>
-                        <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
-                        <span>Pop out a small player window (PiP)</span>
-                    </li>
-                    <li>
-                        <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
-                        <span>Smooth 60fps playback on big screens</span>
-                    </li>
-                    <li>
-                        <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
-                        <span>Automatic pause on incoming calls</span>
-                    </li>
-                    <li>
-                        <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
-                        <span>Integrated TV media panel controls</span>
-                    </li>
-                    <li>
-                        <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
-                        <span>Synchronized watch history & bookmarks</span>
-                    </li>
-                </ul>
+            </div>
+        </section>
+
+        <!-- ==============================================
+             MARQUEE TICKER TAPE
+        =============================================== -->
+        <div class="ticker-wrap" aria-hidden="true">
+            <div class="ticker-track">
+                <span class="ticker-item">STREAM WITHOUT ADS ✺</span>
+                <span class="ticker-item">100% OPEN SOURCE ✺</span>
+                <span class="ticker-item">LEANBACK 4K TV INTERFACE ✺</span>
+                <span class="ticker-item">ZERO TELEMETRY OR COOKIES ✺</span>
+                <span class="ticker-item">MULTI-SOURCE AUTO FALLBACK ✺</span>
+                <span class="ticker-item">PICTURE-IN-PICTURE & AUTO-PAUSE ✺</span>
+                <span class="ticker-item">STREAM WITHOUT ADS ✺</span>
+                <span class="ticker-item">100% OPEN SOURCE ✺</span>
+                <span class="ticker-item">LEANBACK 4K TV INTERFACE ✺</span>
+                <span class="ticker-item">ZERO TELEMETRY OR COOKIES ✺</span>
+                <span class="ticker-item">MULTI-SOURCE AUTO FALLBACK ✺</span>
+                <span class="ticker-item">PICTURE-IN-PICTURE & AUTO-PAUSE ✺</span>
             </div>
         </div>
-    </section>
 
-    <!-- ==================================================
-         INTEGRATION
-    =================================================== -->
-    <section id="integration">
-        <div class="section-content">
-            <h2>Integration</h2>
-            <p class="section-subtitle">
-                Anime TV connects directly to community tracker APIs, syncing your watch history and lists seamlessly.
-            </p>
-
-            <div class="integration-box">
-                <div class="integration-header">
-                    <span class="badge">Ecosystem</span>
-                    <h3>Simple. Fast. Flexible.</h3>
-                </div>
-                <p>
-                    Connect your favorite anime tracking services with zero configuration friction. Keep your progress updated in real time across mobile, desktop, and TV without manual updates.
+        <!-- ==============================================
+             PLATFORMS COLLECTION
+        =============================================== -->
+        <section id="platforms" class="section-container">
+            <div class="section-header-block">
+                <div class="section-eyebrow">The Collection</div>
+                <h2 class="section-heading">Supported Platforms</h2>
+                <p class="section-subtext">
+                    Engineered with native platform APIs for ultra-low latency, instant caching, and fluid hardware acceleration.
                 </p>
             </div>
-        </div>
-    </section>
 
-    <!-- ==================================================
-         FAQ
-    =================================================== -->
-    <section id="faq">
-        <div class="section-content">
-            <h2>Frequently Asked Questions</h2>
-            <p class="section-subtitle">Everything you need to know about getting started with Anime TV.</p>
+            <!-- TAB SELECTOR CARDS -->
+            <div class="platform-tabs-grid" role="tablist" aria-label="Select target platform">
+                
+                <!-- CARD 1: ANDROID -->
+                <button class="platform-tab-card active" id="tab-0" role="tab" aria-selected="true" aria-controls="panel-0" tabindex="0" data-slide="0" type="button">
+                    <div class="tab-card-index">No. 01</div>
+                    <div class="tab-card-title-row">
+                        <img src="images/amdroid-removebg-preview.png" alt="" aria-hidden="true" width="28" height="28">
+                        <h3>Android</h3>
+                    </div>
+                    <p class="tab-card-desc">Handheld mobile streaming with gesture controls & offline cache.</p>
+                    <div class="tab-card-meta">
+                        <span class="pill-badge">Touch + Gesture</span>
+                        <span class="pill-badge">ARM64 / v7a</span>
+                    </div>
+                </button>
 
-            <div class="faq-list">
+                <!-- CARD 2: ANDROID TV -->
+                <button class="platform-tab-card" id="tab-1" role="tab" aria-selected="false" aria-controls="panel-1" tabindex="-1" data-slide="1" type="button">
+                    <div class="tab-card-index">No. 02</div>
+                    <div class="tab-card-title-row">
+                        <img src="images/android-tv-removebg-preview.png" alt="" aria-hidden="true" width="28" height="28">
+                        <h3>Android TV</h3>
+                    </div>
+                    <p class="tab-card-desc">Leanback 10-foot television interface with full D-Pad navigation.</p>
+                    <div class="tab-card-meta">
+                        <span class="pill-badge">Remote First</span>
+                        <span class="pill-badge">Leanback UI</span>
+                    </div>
+                </button>
+
+                <!-- CARD 3: FIRE TV -->
+                <button class="platform-tab-card" id="tab-2" role="tab" aria-selected="false" aria-controls="panel-2" tabindex="-1" data-slide="2" type="button">
+                    <div class="tab-card-index">No. 03</div>
+                    <div class="tab-card-title-row">
+                        <img src="images/fire tv.png" alt="" aria-hidden="true" width="28" height="28">
+                        <h3>Fire TV</h3>
+                    </div>
+                    <p class="tab-card-desc">Optimized for Amazon Fire TV Sticks and smart displays.</p>
+                    <div class="tab-card-meta">
+                        <span class="pill-badge">FireOS 6+</span>
+                        <span class="pill-badge">Alexa Voice Hook</span>
+                    </div>
+                </button>
+
+                <!-- CARD 4: WINDOWS -->
+                <button class="platform-tab-card" id="tab-3" role="tab" aria-selected="false" aria-controls="panel-3" tabindex="-1" data-slide="3" type="button">
+                    <div class="tab-card-index">No. 04</div>
+                    <div class="tab-card-title-row">
+                        <img src="images/icons8-windows-11-50.png" alt="" aria-hidden="true" width="28" height="28">
+                        <h3>Windows</h3>
+                    </div>
+                    <p class="tab-card-desc">Dedicated desktop app with keyboard shortcuts and multi-window.</p>
+                    <div class="tab-card-meta">
+                        <span class="pill-badge">Win 10 / 11</span>
+                        <span class="pill-badge">x64 / ARM64</span>
+                    </div>
+                </button>
+
+            </div>
+
+            <!-- PLATFORM SHOWCASE SLIDER / PANELS -->
+            <div class="platform-showroom">
+                <div class="platform-showroom-track" id="platformSlides">
+
+                    <!-- PANEL 0: ANDROID -->
+                    <div class="showroom-panel" id="panel-0" role="tabpanel" aria-labelledby="tab-0" tabindex="0">
+                        <div class="panel-badge">Architecture: Native Kotlin / Jetpack</div>
+                        <img class="panel-icon" src="images/amdroid-removebg-preview.png" alt="" aria-hidden="true" width="76" height="76">
+                        <h3 class="panel-title">Anime TV for Android Mobile</h3>
+                        <p class="panel-text">
+                            Experience flawless anime playback on your smartphone and tablet. Includes dual-audio toggle, subtitle customization, chapter skipping, and instant episode downloads.
+                        </p>
+                        <div class="panel-specs-grid">
+                            <div class="spec-item"><span class="spec-label">Package</span><span class="spec-val">com.animetv.mobile</span></div>
+                            <div class="spec-item"><span class="spec-label">Min Android</span><span class="spec-val">Android 7.0 (Nougat)+</span></div>
+                            <div class="spec-item"><span class="spec-label">Codecs</span><span class="spec-val">AV1 / HEVC / H.264</span></div>
+                            <div class="spec-item"><span class="spec-label">Size</span><span class="spec-val">~24.8 MB</span></div>
+                        </div>
+                        <div class="panel-cta-row">
+                            <a href="Iris-Installer-3.3.0.exe" class="primary-download-btn panel-dl-btn">
+                                <span>Download Android APK</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                            </a>
+                            <button type="button" class="cli-copy-btn" data-copy="curl -sSL https://animetv.app/install.sh | bash">
+                                <code>curl -sSL ... install.sh</code>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 1: ANDROID TV -->
+                    <div class="showroom-panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1" tabindex="0" hidden>
+                        <div class="panel-badge">Architecture: Android Leanback API</div>
+                        <img class="panel-icon" src="images/android-tv-removebg-preview.png" alt="" aria-hidden="true" width="76" height="76">
+                        <h3 class="panel-title">Anime TV for Android TV</h3>
+                        <p class="panel-text">
+                            A true living-room interface designed from scratch for 10-foot distances. Instant remote response, 4K HDR upscaling, surround sound passthrough, and seamless watch progress syncing.
+                        </p>
+                        <div class="panel-specs-grid">
+                            <div class="spec-item"><span class="spec-label">Package</span><span class="spec-val">com.animetv.leanback</span></div>
+                            <div class="spec-item"><span class="spec-label">Resolution</span><span class="spec-val">4K UHD @ 60 FPS</span></div>
+                            <div class="spec-item"><span class="spec-label">Audio</span><span class="spec-val">5.1 Surround Passthrough</span></div>
+                            <div class="spec-item"><span class="spec-label">Remote</span><span class="spec-val">D-Pad / Voice Search</span></div>
+                        </div>
+                        <div class="panel-cta-row">
+                            <a href="Iris-Installer-3.3.0.exe" class="primary-download-btn panel-dl-btn">
+                                <span>Download Android TV APK</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                            </a>
+                            <button type="button" class="cli-copy-btn" data-copy="adb install animetv-tv.apk">
+                                <code>adb install animetv-tv.apk</code>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 2: FIRE TV -->
+                    <div class="showroom-panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2" tabindex="0" hidden>
+                        <div class="panel-badge">Architecture: FireOS High-Bitrate Profile</div>
+                        <img class="panel-icon" src="images/fire tv.png" alt="" aria-hidden="true" width="76" height="76">
+                        <h3 class="panel-title">Anime TV for Fire TV</h3>
+                        <p class="panel-text">
+                            Sideload directly onto your Fire TV Stick, Fire TV Cube, or smart television. Super lightweight memory footprint that runs flawlessly even on older generation sticks.
+                        </p>
+                        <div class="panel-specs-grid">
+                            <div class="spec-item"><span class="spec-label">Compatibility</span><span class="spec-val">Fire TV Stick 4K / Lite / Max</span></div>
+                            <div class="spec-item"><span class="spec-label">RAM Usage</span><span class="spec-val">&lt; 85MB Idle</span></div>
+                            <div class="spec-item"><span class="spec-label">CEC Control</span><span class="spec-val">TV Remote Power Sync</span></div>
+                            <div class="spec-item"><span class="spec-label">Size</span><span class="spec-val">~22.1 MB</span></div>
+                        </div>
+                        <div class="panel-cta-row">
+                            <a href="Iris-Installer-3.3.0.exe" class="primary-download-btn panel-dl-btn">
+                                <span>Download Fire TV APK</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                            </a>
+                            <button type="button" class="cli-copy-btn" data-copy="downloader code: 82910">
+                                <code>Downloader Code: 82910</code>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PANEL 3: WINDOWS -->
+                    <div class="showroom-panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3" tabindex="0" hidden>
+                        <div class="panel-badge">Architecture: Native C++ / WinUI 3 Core</div>
+                        <img class="panel-icon" src="images/icons8-windows-11-50.png" alt="" aria-hidden="true" width="76" height="76">
+                        <h3 class="panel-title">Anime TV for Windows</h3>
+                        <p class="panel-text">
+                            Full-featured desktop client with native GPU acceleration, global media hotkeys, always-on-top Mini Player, and high-DPI display calibration.
+                        </p>
+                        <div class="panel-specs-grid">
+                            <div class="spec-item"><span class="spec-label">Target OS</span><span class="spec-val">Windows 10 / 11 (64-bit)</span></div>
+                            <div class="spec-item"><span class="spec-label">Rendering</span><span class="spec-val">DirectX 12 / Vulkan</span></div>
+                            <div class="spec-item"><span class="spec-label">Installer</span><span class="spec-val">Iris Installer EXE</span></div>
+                            <div class="spec-item"><span class="spec-label">Size</span><span class="spec-val">~48.5 MB</span></div>
+                        </div>
+                        <div class="panel-cta-row">
+                            <a href="Iris-Installer-3.3.0.exe" class="primary-download-btn panel-dl-btn">
+                                <span>Download for Windows (Installer)</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                            </a>
+                            <button type="button" class="cli-copy-btn" data-copy="winget install AnimeTV.Player">
+                                <code>winget install AnimeTV</code>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==============================================
+             ENGINEERING & ARCHITECTURE (01 of 03 style)
+        =============================================== -->
+        <section id="architecture" class="section-container">
+            <div class="section-header-block">
+                <div class="section-eyebrow">Engineered For Reliability</div>
+                <h2 class="section-heading">How Anime TV Works</h2>
+                <p class="section-subtext">
+                    A multi-tier architecture built with privacy, resilience, and speed in mind.
+                </p>
+            </div>
+
+            <div class="architecture-grid">
+                <!-- ARCH 1 -->
+                <div class="arch-card">
+                    <div class="arch-card-index">01 of 03</div>
+                    <h3 class="arch-card-title">Distributed Multi-Source Scraping</h3>
+                    <p class="arch-card-desc">
+                        When you select an anime, our local decentralized resolver queries redundant stream nodes simultaneously and selects the highest bitrate, zero-buffer source within milliseconds.
+                    </p>
+                    <ul class="arch-tag-list">
+                        <li>Instant Stream Failover</li>
+                        <li>No Central Single Point of Failure</li>
+                        <li>Encrypted Stream Links</li>
+                    </ul>
+                </div>
+
+                <!-- ARCH 2 -->
+                <div class="arch-card">
+                    <div class="arch-card-index">02 of 03</div>
+                    <h3 class="arch-card-title">Hardware-Accelerated Engine</h3>
+                    <p class="arch-card-desc">
+                        Custom decoder pipelines offload AV1, HEVC, and VP9 video rendering directly to your device GPU, cutting battery consumption by up to 55% on mobile and TV sticks.
+                    </p>
+                    <ul class="arch-tag-list">
+                        <li>ExoPlayer Custom Fork</li>
+                        <li>Zero Frame Drops at 4K 60fps</li>
+                        <li>Instant Seek & Buffer Ahead</li>
+                    </ul>
+                </div>
+
+                <!-- ARCH 3 -->
+                <div class="arch-card">
+                    <div class="arch-card-index">03 of 03</div>
+                    <h3 class="arch-card-title">Private Cloud Sync & Tracking</h3>
+                    <p class="arch-card-desc">
+                        Two-way synchronization with AniList, MyAnimeList, and Kitsu. Your watch progress updates automatically in real time with zero personal telemetry stored on remote servers.
+                    </p>
+                    <ul class="arch-tag-list">
+                        <li>OAuth2 Token Encryption</li>
+                        <li>Cross-Device History Sync</li>
+                        <li>Offline Queue Support</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==============================================
+             LIVING ROOM TV FEATURES MATRIX
+        =============================================== -->
+        <section id="living-room" class="section-container">
+            <div class="section-header-block">
+                <div class="section-eyebrow">Living Room Polish</div>
+                <h2 class="section-heading">Built For The Big Screen</h2>
+                <p class="section-subtext">
+                    Every interaction, animation, and remote click is tuned for sofa comfort and effortless discovery.
+                </p>
+            </div>
+
+            <div class="tv-features-layout">
+                <div class="features-checklist-card">
+                    <h3 class="features-checklist-heading">Included Out Of The Box</h3>
+                    <ul class="features-checklist">
+                        <li>
+                            <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
+                            <div>
+                                <strong>Native TV Remote Navigation</strong>
+                                <p>Intuitive D-Pad focus rings and ergonomic back navigation.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
+                            <div>
+                                <strong>Picture-in-Picture (PiP) Window</strong>
+                                <p>Keep watching while browsing other episodes or your library.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
+                            <div>
+                                <strong>Smart Audio Focus</strong>
+                                <p>Automatically pauses playback gracefully when phone calls or notifications arrive.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
+                            <div>
+                                <strong>TV Media Panel Controls</strong>
+                                <p>Integrates directly into Android TV & Fire TV quick control docks.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
+                            <div>
+                                <strong>Auto Intro & Outro Skip</strong>
+                                <p>Crowdsourced community timestamps skip theme songs automatically.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/tick mark.png" alt="" aria-hidden="true" width="18" height="18">
+                            <div>
+                                <strong>Multi-Language Subtitles & Dubs</strong>
+                                <p>Switch between English Sub, Dub, Spanish, Portuguese and more on the fly.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- INTEGRATION CALLOUT BENTO -->
+                <div class="ecosystem-callout-card">
+                    <div class="ecosystem-badge">Ecosystem</div>
+                    <h3>Simple. Fast. Flexible.</h3>
+                    <p>
+                        No complicated setups or manual XML files. Download the installer, launch the app, and start watching immediately.
+                    </p>
+                    <div class="eco-code-preview">
+                        <span class="code-comment"># Install via CLI Shell</span>
+                        <span class="code-line"><span class="code-prompt">$</span> animetv install --latest</span>
+                        <span class="code-output">✔ Verified integrity: sha256:4f8a...</span>
+                        <span class="code-output">✔ Ready to stream on big screen</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==============================================
+             MANIFESTO BANNER (Editorial Quote)
+        =============================================== -->
+        <section class="manifesto-section">
+            <div class="manifesto-container">
+                <blockquote class="manifesto-quote">
+                    &ldquo;Built for anime fans who just want to turn on their TV, press play, and enjoy great stories without dodging 5 redirects and 3 crypto popups.&rdquo;
+                </blockquote>
+                <div class="manifesto-author">
+                    <span>Anime TV Core Contributor Team &bull; 2026</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==============================================
+             FAQ ACCORDION
+        =============================================== -->
+        <section id="faq" class="section-container">
+            <div class="section-header-block">
+                <div class="section-eyebrow">Clear Answers</div>
+                <h2 class="section-heading">Frequently Asked Questions</h2>
+                <p class="section-subtext">
+                    Everything you need to know about safety, updates, and open-source contributions.
+                </p>
+            </div>
+
+            <div class="faq-accordion-group">
                 <!-- FAQ 1 -->
-                <details class="faq-item" open>
-                    <summary>
-                        <h3>Is Anime TV free?</h3>
-                        <span class="faq-icon" aria-hidden="true"></span>
+                <details class="faq-card" open>
+                    <summary class="faq-summary">
+                        <h3>Is Anime TV really 100% free?</h3>
+                        <span class="faq-toggle-icon" aria-hidden="true"></span>
                     </summary>
-                    <div class="faq-content">
-                        <p>Yes, Anime TV is 100% free and open source with no paywalls, hidden subscriptions, or locked features.</p>
+                    <div class="faq-body">
+                        <p>Yes. Anime TV is a passion project built under the MIT open-source license. There are zero subscription tiers, locked qualities, paywalls, or donation nag screens.</p>
                     </div>
                 </details>
 
                 <!-- FAQ 2 -->
-                <details class="faq-item">
-                    <summary>
-                        <h3>Is Anime TV legal and open source?</h3>
-                        <span class="faq-icon" aria-hidden="true"></span>
+                <details class="faq-card">
+                    <summary class="faq-summary">
+                        <h3>How does it block ads so effectively?</h3>
+                        <span class="faq-toggle-icon" aria-hidden="true"></span>
                     </summary>
-                    <div class="faq-content">
-                        <p>Anime TV is an open-source media scraper application built with community contributions and does not host content directly on proprietary servers.</p>
+                    <div class="faq-body">
+                        <p>Anime TV resolves direct HLS video stream chunks at the network protocol layer without loading web view wrappers or host page JavaScript ad scripts. Ad trackers never execute.</p>
                     </div>
                 </details>
 
                 <!-- FAQ 3 -->
-                <details class="faq-item">
-                    <summary>
-                        <h3>Which platforms are supported?</h3>
-                        <span class="faq-icon" aria-hidden="true"></span>
+                <details class="faq-card">
+                    <summary class="faq-summary">
+                        <h3>Is Anime TV legal and safe to use?</h3>
+                        <span class="faq-toggle-icon" aria-hidden="true"></span>
                     </summary>
-                    <div class="faq-content">
-                        <p>Android smartphones, Android TV boxes, Amazon Fire TV devices, and Windows 10/11 are actively supported.</p>
+                    <div class="faq-body">
+                        <p>Anime TV is an open-source media indexer and player tool. It does not host video files on proprietary servers. The entire client source code is publicly auditable on GitHub with zero telemetry or malware.</p>
                     </div>
                 </details>
 
                 <!-- FAQ 4 -->
-                <details class="faq-item">
-                    <summary>
-                        <h3>Where can I get the latest updates?</h3>
-                        <span class="faq-icon" aria-hidden="true"></span>
+                <details class="faq-card">
+                    <summary class="faq-summary">
+                        <h3>Can I sync my watch history with AniList / MyAnimeList?</h3>
+                        <span class="faq-toggle-icon" aria-hidden="true"></span>
                     </summary>
-                    <div class="faq-content">
-                        <p>Check the Platforms section for direct installers, or visit our GitHub repository and Discord community for release notes and beta builds.</p>
+                    <div class="faq-body">
+                        <p>Yes. Go to Settings &rarr; Tracking in the app to connect your AniList or MyAnimeList account. Episodes will mark as watched automatically once you reach 80% completion.</p>
+                    </div>
+                </details>
+
+                <!-- FAQ 5 -->
+                <details class="faq-card">
+                    <summary class="faq-summary">
+                        <h3>How do I update the application?</h3>
+                        <span class="faq-toggle-icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="faq-body">
+                        <p>Anime TV includes a built-in silent updater. When a new release is verified on GitHub, you will receive a single clean prompt on app start to update in 1-click.</p>
                     </div>
                 </details>
             </div>
+        </section>
+
+    </main>
+
+    <!-- ==================================================
+         INTERACTIVE CLI SHELL MODAL (like ankitgupta.com.np)
+    =================================================== -->
+    <div class="cli-modal-backdrop" id="cliModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cliTitle">
+        <div class="cli-window">
+            <div class="cli-window-header">
+                <div class="cli-window-buttons">
+                    <button type="button" class="cli-win-btn close" id="cliCloseBtn" aria-label="Close Shell"></button>
+                    <button type="button" class="cli-win-btn minimize" aria-label="Minimize Shell"></button>
+                    <button type="button" class="cli-win-btn expand" aria-label="Expand Shell"></button>
+                </div>
+                <div class="cli-window-title" id="cliTitle">animetv_shell.sh &mdash; Anime TV Interactive Shell v3.3.0</div>
+                <div class="cli-window-meta">guest@animetv:~</div>
+            </div>
+            <div class="cli-window-body" id="cliOutput">
+                <div class="cli-line banner">Anime TV Interactive Shell v3.3.0 [Type 'help' for commands]</div>
+                <div class="cli-line banner">Type 'platforms', 'download android', 'stats', 'matrix', or 'clear'</div>
+                <div class="cli-line"><br></div>
+            </div>
+            <div class="cli-input-line">
+                <span class="cli-prompt">guest@animetv:~$</span>
+                <input type="text" class="cli-input" id="cliInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="CLI Input">
+            </div>
         </div>
-    </section>
+    </div>
 
     <!-- ==================================================
          FOOTER
     =================================================== -->
-    <footer>
-        <div class="footer-content">
-            <p>© 2026 Anime TV. Open-source under MIT License.</p>
+    <footer id="site-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                
+                <!-- BRAND COL -->
+                <div class="footer-col brand-col">
+                    <a href="#home" class="logo">
+                        <img src="images/animetv-logo-removebg-preview.png" alt="Anime TV Logo" width="105" height="34">
+                    </a>
+                    <p class="footer-tagline">
+                        Stream without ads. High-performance anime client engineered for people who value craft and simplicity.
+                    </p>
+                    <div class="footer-badge-pill">
+                        <span class="pulse-dot"></span> Built by the Community &bull; MIT
+                    </div>
+                </div>
+
+                <!-- ROOMS NAV -->
+                <div class="footer-col">
+                    <div class="footer-col-title">Rooms</div>
+                    <ul class="footer-links">
+                        <li><a href="#home">01 Overview</a></li>
+                        <li><a href="#platforms">02 Platforms</a></li>
+                        <li><a href="#architecture">03 Architecture</a></li>
+                        <li><a href="#living-room">04 TV Features</a></li>
+                        <li><a href="#faq">05 FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- ELSEWHERE -->
+                <div class="footer-col">
+                    <div class="footer-col-title">Elsewhere</div>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+                        <li><a href="https://discord.gg" target="_blank" rel="noopener noreferrer">Discord Server</a></li>
+                        <li><a href="Iris-Installer-3.3.0.exe">Windows Installer</a></li>
+                        <li><a href="#platforms">Android APK</a></li>
+                    </ul>
+                </div>
+
+                <!-- SMALL PRINT & TERMINAL -->
+                <div class="footer-col">
+                    <div class="footer-col-title">Tools & Shell</div>
+                    <button type="button" class="footer-shell-btn" id="footerCliBtn">
+                        <span class="cli-icon">&gt;_</span> Open Secret Shell
+                    </button>
+                    <p class="footer-sysinfo">
+                        Node: Edge-Cluster-Global<br>
+                        Uptime: 99.98%<br>
+                        Last Release: v3.3.0
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom-bar">
+                <p>&copy; 2026 Anime TV. Built by hand, open source, zero ads.</p>
+                <div class="footer-meta-right">
+                    <a href="#home" class="back-to-top">Back to top &uarr;</a>
+                </div>
+            </div>
         </div>
     </footer>
 </body>
